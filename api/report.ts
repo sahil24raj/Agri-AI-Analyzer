@@ -189,25 +189,25 @@ Keep language simple and farmer-friendly in the target language. Be highly detai
 
     const userContent: any[] = [
       { type: 'text', text: prompt },
-      { type: 'image_url', image_url: { url: \`data:\${mimeType};base64,\${imageBase64}\` } }
+      { type: 'image_url', image_url: { url: `data:${mimeType};base64,${imageBase64}` } }
     ];
 
     if (hasFieldImage) {
-      userContent.push({ type: 'image_url', image_url: { url: \`data:\${fieldImageMimeType};base64,\${fieldImageBase64}\` } });
+      userContent.push({ type: 'image_url', image_url: { url: `data:${fieldImageMimeType};base64,${fieldImageBase64}` } });
     }
 
     const response = await fetch(GROQ_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${apiKey}\`,
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: 'llama-3.2-90b-vision-preview',
         messages: [
           {
             role: 'system',
-            content: \`You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: You must translate EVERY string value in the JSON response to the language code '\${language}'. The JSON keys must remain strictly in English.\`,
+            content: `You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: You must translate EVERY string value in the JSON response to the language code '${language}'. The JSON keys must remain strictly in English.`,
           },
           {
             role: 'user',
