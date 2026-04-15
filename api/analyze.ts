@@ -51,7 +51,7 @@ If unsure, give best possible estimation instead of refusing.`;
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        model: 'llama-3.2-11b-vision-preview',
         messages: [
           {
             role: 'system',
