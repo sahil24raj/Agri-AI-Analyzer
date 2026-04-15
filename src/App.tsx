@@ -263,22 +263,18 @@ export default function App() {
 
               {editMode && editedCrop ? (
                 <div>
-                  {[
-                    { key: 'crop_type', label: 'Crop Type', icon: '🌾', placeholder: 'e.g., Wheat, Rice, Tomato' },
-                    { key: 'soil_type', label: 'Soil Type', icon: '🪸', placeholder: 'e.g., Loamy, Sandy, Clay' },
-                    { key: 'temperature', label: 'Temperature Range', icon: '🌡️', placeholder: 'e.g., 25–30°C' },
-                  ].map(({ key, label, icon, placeholder }) => (
-                    <div className="form-group" key={key}>
-                      <label className="form-label">{icon} {label}</label>
-                      <input
-                        className="form-input"
-                        value={(editedCrop as Record<string, string>)[key]}
-                        onChange={e => setEditedCrop(p => ({ ...p!, [key]: e.target.value }))}
-                        placeholder={placeholder}
-                        id={`edit-${key}`}
-                      />
-                    </div>
-                  ))}
+                  <div className="form-group">
+                    <label className="form-label">🌾 Crop Type</label>
+                    <input className="form-input" value={editedCrop.crop_type} onChange={e => setEditedCrop(p => ({ ...p!, crop_type: e.target.value }))} placeholder="e.g., Wheat, Rice, Tomato" id="edit-crop_type" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">🪸 Soil Type</label>
+                    <input className="form-input" value={editedCrop.soil_type} onChange={e => setEditedCrop(p => ({ ...p!, soil_type: e.target.value }))} placeholder="e.g., Loamy, Sandy, Clay" id="edit-soil_type" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">🌡️ Temperature Range</label>
+                    <input className="form-input" value={editedCrop.temperature} onChange={e => setEditedCrop(p => ({ ...p!, temperature: e.target.value }))} placeholder="e.g., 25–30°C" id="edit-temperature" />
+                  </div>
                 </div>
               ) : null}
 
