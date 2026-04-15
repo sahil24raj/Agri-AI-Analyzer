@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# 🌾 Smart Crop Detector — AI Agricultural Intelligence
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered web application that analyzes crop images and provides detailed health reports, mineral deficiency analysis, home remedies, fertilizer recommendations, and actionable improvement plans for farmers.
 
-Currently, two official plugins are available:
+**Powered by Groq + Llama 4 Scout Vision AI**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Step | Feature |
+|------|---------|
+| 📸 **Image Upload** | Drag-and-drop crop image upload with instant preview |
+| 🔍 **AI Detection** | Automatically detects crop type, soil type, and temperature |
+| ✅ **User Verification** | Verify or correct AI predictions before generating report |
+| 📊 **Health Dashboard** | Visual score gauges for health, nutrition, water, and disease risk |
+| ⚗️ **NPK Analysis** | Nitrogen, Phosphorus, Potassium deficiency level bars |
+| 💡 **AI Insights** | Simple farmer-friendly explanations of crop condition |
+| 🏡 **Gharelu Nuske** | Traditional home remedies for crop issues |
+| 🧪 **Fertilizer Advice** | Recommended fertilizers with dosage |
+| 💧 **Watering Tips** | Irrigation suggestions based on crop needs |
+| 🗺️ **Action Plan** | 5-step improvement plan for better yield |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Deploy on Vercel
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. Import from GitHub
+- Go to [vercel.com/new](https://vercel.com/new)
+- Import **`AI-Detector24`** from your GitHub
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 2. Add Environment Variable
+In Vercel project settings → **Environment Variables**, add:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Key | Value |
+|-----|-------|
+| `GROQ_API_KEY` | Your Groq API key from [console.groq.com/keys](https://console.groq.com/keys) |
+
+### 3. Deploy!
+Click **Deploy** — Vercel will build the Vite app and set up the serverless API routes automatically.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Custom CSS (dark theme, nature-inspired palette)
+- **AI**: Groq API with Llama 4 Scout 17B (vision model)
+- **Backend**: Vercel Serverless Functions (Node.js)
+- **Deployment**: Vercel
+
+## 📁 Project Structure
+
+```
+├── api/
+│   ├── analyze.ts       # Serverless: crop image analysis
+│   └── report.ts        # Serverless: full health report
+├── src/
+│   ├── App.tsx           # Main React component (all 6 steps)
+│   ├── geminiService.ts  # Frontend API client
+│   ├── types.ts          # TypeScript interfaces
+│   └── index.css         # Premium dark theme styles
+├── vercel.json           # Vercel deployment config
+└── index.html            # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🔑 Getting a Groq API Key (Free)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign up / Sign in
+3. Go to **API Keys** → **Create API Key**
+4. Copy the key and add it to Vercel env vars
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 🌱 Local Development
+
+```bash
+npm install
+npm run dev
 ```
+
+> Note: For local development, the `/api/*` serverless functions won't work directly. The app is designed to be deployed on Vercel where the serverless functions run automatically.
+
+---
+
+Made with ❤️ for Indian Farmers
