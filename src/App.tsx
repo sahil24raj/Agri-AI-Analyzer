@@ -74,6 +74,7 @@ export default function App() {
   const [editMode, setEditMode] = useState(false);
   const [locationName, setLocationName] = useState<string>('');
   const [isLocating, setIsLocating] = useState<boolean>(false);
+  const [weatherData, setWeatherData] = useState<{temp: number, humidity: number, rainfall: number} | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function showToast(msg: string, error = false) {
@@ -114,6 +115,22 @@ export default function App() {
                const shortLoc = [addr.village || addr.town || addr.city, addr.state, addr.country].filter(Boolean).join(', ');
                setLocationName(shortLoc || data.display_name);
             }
+
+            // Fetch Weather
+            try {
+               const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation`);
+               const weatherJson = await weatherRes.json();
+               if (weatherJson && weatherJson.current) {
+                 setWeatherData({
+                   temp: weatherJson.current.temperature_2m,
+                   humidity: weatherJson.current.relative_humidity_2m,
+                   rainfall: weatherJson.current.precipitation
+                 });
+               }
+            } catch (we) {
+               console.error("Weather fetch failed", we);
+            }
+
           } catch (e) {
             console.error("Geocoding failed", e);
           } finally {
@@ -140,7 +157,11 @@ export default function App() {
     setLoading(true);
     setLoadingMsg('🔍 Analyzing crop image with AI...');
     try {
-      const result = await analyzeImage(imageBase64, imageMime, locationName);
+      let locationContext = locationName;
+      if (weatherData) {
+        locationContext += ` | Current Weather: Temp ${weatherData.temp}°C, Humidity ${weatherData.humidity}%, Rainfall ${weatherData.rainfall}mm`;
+      }
+      const result = await analyzeImage(imageBase64, imageMime, locationContext);
       setCropData(result);
       setEditedCrop({ ...result });
       setStep('verifying');
@@ -156,7 +177,11 @@ export default function App() {
     setLoading(true);
     setLoadingMsg('🌱 Generating full crop health report...');
     try {
-      const full = await generateFullReport(imageBase64, imageMime, confirmed, locationName);
+      let locationContext = locationName;
+      if (weatherData) {
+        locationContext += ` | Current Weather: Temp ${weatherData.temp}°C, Humidity ${weatherData.humidity}%, Rainfall ${weatherData.rainfall}mm`;
+      }
+      const full = await generateFullReport(imageBase64, imageMime, confirmed, locationContext);
       setReport(full);
       setStep('results');
     } catch (e: unknown) {
@@ -176,6 +201,7 @@ export default function App() {
     setReport(null);
     setEditMode(false);
     setLocationName('');
+    setWeatherData(null);
     setIsLocating(false);
   }
 
@@ -241,6 +267,11 @@ export default function App() {
                 {locationName && (
                   <div style={{ textAlign: 'center', marginTop: '0.25rem', fontSize: '0.85rem', color: 'var(--text-dim)' }}>
                     📍 Location: {locationName}
+                  </div>
+                )}
+                {weatherData && (
+                  <div style={{ textAlign: 'center', marginTop: '0.25rem', fontSize: '0.85rem', color: 'var(--text-dim)' }}>
+                    🌡️ Temp: {weatherData.temp}°C | 💧 Humidity: {weatherData.humidity}% | 🌧️ Rainfall: {weatherData.rainfall}mm
                   </div>
                 )}
                 {isLocating && (
