@@ -40,23 +40,6 @@ function ScoreRing({ value, label, name, color, inverted = false }: {
   );
 }
 
-// ─── NPK Bar ──────────────────────────────
-
-function NpkBar({ name, value, color }: { name: string; value: number; color: string }) {
-  const label = value > 60 ? 'Severe' : value > 30 ? 'Moderate' : 'Adequate';
-  return (
-    <div className="npk-row">
-      <div className="npk-header">
-        <span className="npk-name">{name}</span>
-        <span className="npk-val">{value}% deficient – {label}</span>
-      </div>
-      <div className="npk-bar-bg">
-        <div className="npk-bar-fill" style={{ width: `${value}%`, background: color }} />
-      </div>
-    </div>
-  );
-}
-
 // ─── Main App ────────────────────────────
 
 export default function App() {
