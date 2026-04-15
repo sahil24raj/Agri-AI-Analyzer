@@ -107,7 +107,12 @@ STEP 20: ISSUE IDENTIFICATION
 
 STEP 21: FINAL OUTPUT FORMAT (STRICT)
 Generate a comprehensive JSON report containing EXACTLY these fields reflecting your massively detailed 21-step reasoning:
-IMPORTANT INSTRUCTION: Translate all string VALUES inside the JSON into the language code "${language}". Keep the EXACT JSON keys in English. Do NOT use markdown code blocks, just raw JSON.
+
+CRITICAL LANGUAGE RULE: 
+You MUST entirely translate ALL string VALUES inside this JSON into the language code "${language}". This is fully mandatory!
+Even if the examples below are in English, the final output VALUES must be completely in the "${language}" language. 
+DO NOT use English for values if the requested language is not English. ONLY the exact JSON keys must remain in English.
+Do NOT use markdown code blocks, just raw JSON.
 {
   "crop": "[Crop Name] 🌱",
   "stage": "[Predicted Stage] + (Normal/Abnormal)",
@@ -168,7 +173,7 @@ Keep language simple and farmer-friendly in the target language. Be highly detai
         messages: [
           {
             role: 'system',
-            content: 'You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown.',
+            content: \`You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: You must translate EVERY string value in the JSON response to the language code '\${language}'. The JSON keys must remain strictly in English.\`,
           },
           {
             role: 'user',

@@ -29,7 +29,10 @@ Detect and predict:
 5. Estimated Temperature Range (in °C based on crop/environment)
 
 Return ONLY valid JSON in this exact format. 
-IMPORTANT INSTRUCTION: Translate all string VALUES inside the JSON into the language code "${language}". Keep the JSON EXACT keys in English.
+CRITICAL LANGUAGE RULE: 
+You MUST entirely translate ALL string VALUES inside this JSON into the language code "${language}". This is fully mandatory!
+Even if the examples below are in English, the final output VALUES must be completely in the "${language}" language. 
+DO NOT use English for values if the requested language is not English. ONLY the exact JSON keys must remain in English.
 {
   "crop_type": "...",
   "disease": "...",
@@ -52,7 +55,7 @@ If unsure, give best possible estimation instead of refusing.`;
         messages: [
           {
             role: 'system',
-            content: 'You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown.',
+            content: \`You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: You must translate EVERY string value in the JSON response to the language code '\${language}'. The JSON keys must remain strictly in English.\`,
           },
           {
             role: 'user',
