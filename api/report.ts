@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { imageBase64, mimeType, cropData, location, weather } = req.body;
+    const { imageBase64, mimeType, cropData, location, weather, language = 'en' } = req.body;
 
     if (!imageBase64 || !mimeType || !cropData) {
       return res.status(400).json({ error: 'imageBase64, mimeType, and cropData are required' });
@@ -70,6 +70,7 @@ STEP 8: SMART RECOMMENDATIONS
 
 STEP 9: FINAL OUTPUT FORMAT (STRICT)
 Generate a comprehensive JSON report containing EXACTLY these fields reflecting your 9-step reasoning:
+IMPORTANT INSTRUCTION: Translate all string VALUES inside the JSON into the language code "${language}". Keep the EXACT JSON keys in English.
 {
   "crop": "[Name] 🌱",
   "health_score": [0-100 number],
@@ -100,7 +101,7 @@ Generate a comprehensive JSON report containing EXACTLY these fields reflecting 
   ]
 }
 
-Keep language simple and farmer-friendly. Do not hallucinate unknown diseases. Return ONLY valid JSON.`;
+Keep language simple and farmer-friendly in the target language. Do not hallucinate unknown diseases. Return ONLY valid JSON.`;
 
     const response = await fetch(GROQ_API_URL, {
       method: 'POST',

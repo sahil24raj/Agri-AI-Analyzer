@@ -1,10 +1,10 @@
 import type { CropAnalysis, FullReport } from './types';
 
-export async function analyzeImage(imageBase64: string, mimeType: string, location: string): Promise<CropAnalysis> {
+export async function analyzeImage(imageBase64: string, mimeType: string, location: string, language: string = 'en'): Promise<CropAnalysis> {
   const response = await fetch('/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageBase64, mimeType, location }),
+    body: JSON.stringify({ imageBase64, mimeType, location, language }),
   });
 
   if (!response.ok) {
@@ -15,11 +15,11 @@ export async function analyzeImage(imageBase64: string, mimeType: string, locati
   return response.json();
 }
 
-export async function generateFullReport(imageBase64: string, mimeType: string, cropData: CropAnalysis, location: string, weather: any): Promise<FullReport> {
+export async function generateFullReport(imageBase64: string, mimeType: string, cropData: CropAnalysis, location: string, weather: any, language: string = 'en'): Promise<FullReport> {
   const response = await fetch('/api/report', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageBase64, mimeType, cropData, location, weather }),
+    body: JSON.stringify({ imageBase64, mimeType, cropData, location, weather, language }),
   });
 
   if (!response.ok) {

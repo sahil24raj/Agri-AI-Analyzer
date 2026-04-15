@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { imageBase64, mimeType, location } = req.body;
+    const { imageBase64, mimeType, location, language = 'en' } = req.body;
 
     if (!imageBase64 || !mimeType) {
       return res.status(400).json({ error: 'imageBase64 and mimeType are required' });
@@ -28,7 +28,8 @@ Detect and predict:
 4. Soil Type (e.g., sandy, clay, loamy, black soil, etc.)
 5. Estimated Temperature Range (in °C based on crop/environment)
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON in this exact format. 
+IMPORTANT INSTRUCTION: Translate all string VALUES inside the JSON into the language code "${language}". Keep the JSON EXACT keys in English.
 {
   "crop_type": "...",
   "disease": "...",

@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import './index.css';
 import { analyzeImage, generateFullReport } from './geminiService';
 import type { AppStep, CropAnalysis, FullReport } from './types';
+import { languages, getTranslation } from './translations';
 
 // ─── Score Ring Component ──────────────────
 
@@ -59,6 +60,7 @@ function NpkBar({ name, value, color }: { name: string; value: number; color: st
 // ─── Main App ────────────────────────────
 
 export default function App() {
+  const [language, setLanguage] = useState<string>('en');
   const [step, setStep] = useState<AppStep>('upload');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageBase64, setImageBase64] = useState('');
@@ -76,6 +78,8 @@ export default function App() {
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<{temp: number, humidity: number, rainfall: number} | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const t = (key: string) => getTranslation(language, key);
 
   function showToast(msg: string, error = false) {
     setToast({ msg, error });
@@ -161,7 +165,7 @@ export default function App() {
       if (weatherData) {
         locationContext += ` | Current Weather: Temp ${weatherData.temp}°C, Humidity ${weatherData.humidity}%, Rainfall ${weatherData.rainfall}mm`;
       }
-      const result = await analyzeImage(imageBase64, imageMime, locationContext);
+      const result = await analyzeImage(imageBase64, imageMime, locationContext, language);
       setCropData(result);
       setEditedCrop({ ...result });
       setStep('verifying');
@@ -181,7 +185,7 @@ export default function App() {
       if (weatherData) {
         locationContext += ` | Current Weather: Temp ${weatherData.temp}°C, Humidity ${weatherData.humidity}%, Rainfall ${weatherData.rainfall}mm`;
       }
-      const full = await generateFullReport(imageBase64, imageMime, confirmed, locationContext);
+      const full = await generateFullReport(imageBase64, imageMime, confirmed, locationContext, weatherData, language);
       setReport(full);
       setStep('results');
     } catch (e: unknown) {
@@ -214,11 +218,20 @@ export default function App() {
       {/* HEADER */}
       <header className="header">
         <div className="header-logo">🌾</div>
-        <div>
-          <div className="header-title">Smart Crop Detector</div>
-          <div className="header-sub">AI-Powered Agricultural Intelligence</div>
+        <div style={{ flex: 1 }}>
+          <div className="header-title">{t('app_title')}</div>
+          <div className="header-sub">{t('app_subtitle')}</div>
         </div>
-        <div className="header-badge">⚡ Groq + Llama 4</div>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <select 
+            value={language} 
+            onChange={(e) => setLanguage(e.target.value)}
+            style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: '#1e293b', color: '#fff', border: '1px solid #334155', outline: 'none', cursor: 'pointer', fontWeight: 500 }}
+          >
+            {languages.map(l => <option key={l.code} value={l.code}>{l.name}</option>)}
+          </select>
+          <div className="header-badge">⚡ Groq + Llama 4</div>
+        </div>
       </header>
 
       <main className="app-container">
@@ -248,8 +261,8 @@ export default function App() {
                 id="dropzone"
               >
                 <div className="dropzone-icon">📸</div>
-                <div className="dropzone-text">Drop your crop image here</div>
-                <div className="dropzone-sub">or click to browse · JPG, PNG, WEBP supported</div>
+                <div className="dropzone-text">{t('dropzone_title')}</div>
+                <div className="dropzone-sub">{t('dropzone_sub')}</div>
                 <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
               </div>
             ) : (
@@ -257,8 +270,8 @@ export default function App() {
                 <div className="img-preview-wrap">
                   <img className="img-preview" src={imagePreview} alt="Crop preview" />
                   <div className="img-overlay">
-                    <span className="img-badge">✅ Image Ready</span>
-                    <button className="btn btn-danger" style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', borderRadius: '8px' }} onClick={() => { setImagePreview(''); setImageFile(null); setImageBase64(''); }}>✕ Remove</button>
+                    <span className="img-badge">✅ {t('image_ready')}</span>
+                    <button className="btn btn-danger" style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', borderRadius: '8px' }} onClick={() => { setImagePreview(''); setImageFile(null); setImageBase64(''); }}>✕ {t('remove')}</button>
                   </div>
                 </div>
                 <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
@@ -317,7 +330,7 @@ export default function App() {
             ) : (
               <div className="btn-group">
                 <button className="btn btn-primary" onClick={doStep1Analyze} disabled={!imageBase64} id="analyze-btn">
-                  🔍 Analyze with AI
+                  🔍 {t('analyze_ai')}
                 </button>
               </div>
             )}
@@ -328,8 +341,8 @@ export default function App() {
         {step === 'verifying' && cropData && (
           <div>
             <div className="card" style={{ marginBottom: '1rem' }}>
-              <div className="card-title">✅ Step 1 — AI Detected Results</div>
-              <div className="card-desc">Review what the AI detected. Confirm if correct, or edit the fields below.</div>
+              <div className="card-title">{t('step1_title')}</div>
+              <div className="card-desc">{t('step1_desc')}</div>
               <div className="result-grid">
                 {[
                   { icon: '🌾', label: 'Crop Type', value: cropData.crop_type },
@@ -346,7 +359,7 @@ export default function App() {
                 ))}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span className="confidence-badge">⚡ Confidence: {cropData.confidence}</span>
+                <span className="confidence-badge">⚡ {t('confidence')}: {cropData.confidence}</span>
               </div>
             </div>
 
@@ -357,8 +370,8 @@ export default function App() {
 
             {/* EDIT SECTION */}
             <div className="card">
-              <div className="card-title">📝 Are these details correct?</div>
-              <div className="card-desc">If any field is wrong, toggle edit mode and correct it before generating the full report.</div>
+              <div className="card-title">{t('details_correct')}</div>
+              <div className="card-desc">{t('edit_desc')}</div>
 
               {editMode && editedCrop ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -387,12 +400,12 @@ export default function App() {
 
               <div className="btn-group">
                 <button className="btn btn-primary" onClick={doStep3Report} id="confirm-btn">
-                  ✅ Confirm & Generate Report
+                  ✅ {t('confirm_btn')}
                 </button>
                 <button className="btn btn-outline" onClick={() => setEditMode(p => !p)} id="edit-toggle-btn">
-                  {editMode ? '❌ Cancel Edit' : '✏️ Edit Details'}
+                  {editMode ? `❌ ${t('cancel_edit')}` : `✏️ ${t('edit_details')}`}
                 </button>
-                <button className="btn btn-danger" onClick={resetApp}>↩ Start Over</button>
+                <button className="btn btn-danger" onClick={resetApp}>↩ {t('start_over')}</button>
               </div>
 
               {loading && (
@@ -486,7 +499,7 @@ export default function App() {
             {/* RESET BTN */}
             <div className="btn-group" style={{ justifyContent: 'center' }}>
               <button className="btn btn-primary" onClick={resetApp} id="new-analysis-btn">
-                🌱 Analyze Another Crop
+                🌱 {t('analyze_another')}
               </button>
             </div>
           </div>
