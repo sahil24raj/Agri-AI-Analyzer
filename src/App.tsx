@@ -335,6 +335,8 @@ export default function App() {
                   { icon: '🌾', label: 'Crop Type', value: cropData.crop_type },
                   { icon: '🪸', label: 'Soil Type', value: cropData.soil_type },
                   { icon: '🌡️', label: 'Temperature', value: cropData.temperature },
+                  { icon: '🦠', label: 'Disease/Pest', value: cropData.disease || 'None' },
+                  { icon: '📉', label: 'Affected Area', value: cropData.affected_area || '0%' },
                 ].map(({ icon, label, value }) => (
                   <div className="result-chip" key={label}>
                     <div className="result-chip-icon">{icon}</div>
@@ -359,7 +361,7 @@ export default function App() {
               <div className="card-desc">If any field is wrong, toggle edit mode and correct it before generating the full report.</div>
 
               {editMode && editedCrop ? (
-                <div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <div className="form-group">
                     <label className="form-label">🌾 Crop Type</label>
                     <input className="form-input" value={editedCrop.crop_type} onChange={e => setEditedCrop(p => ({ ...p!, crop_type: e.target.value }))} placeholder="e.g., Wheat, Rice, Tomato" id="edit-crop_type" />
@@ -371,6 +373,14 @@ export default function App() {
                   <div className="form-group">
                     <label className="form-label">🌡️ Temperature Range</label>
                     <input className="form-input" value={editedCrop.temperature} onChange={e => setEditedCrop(p => ({ ...p!, temperature: e.target.value }))} placeholder="e.g., 25–30°C" id="edit-temperature" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">🦠 Disease or Pest</label>
+                    <input className="form-input" value={editedCrop.disease || ''} onChange={e => setEditedCrop(p => ({ ...p!, disease: e.target.value }))} placeholder="e.g., None, Leaf Miner" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">📉 Affected Area</label>
+                    <input className="form-input" value={editedCrop.affected_area || ''} onChange={e => setEditedCrop(p => ({ ...p!, affected_area: e.target.value }))} placeholder="e.g., 30%" />
                   </div>
                 </div>
               ) : null}
@@ -402,87 +412,72 @@ export default function App() {
             {/* HEALTH SCORES */}
             <div className="card" style={{ marginBottom: '1rem' }}>
               <div className="card-title">📊 Crop Health Dashboard</div>
-              <div className="card-desc">AI-generated health scores based on your crop image and confirmed data.</div>
+              <div className="card-desc">AI-generated health scores based on your crop image and the 9-step environment analysis.</div>
 
               <div className="scores-grid">
-                <ScoreRing value={report.health.crop_health_score} name="Overall Health" color="#22c55e" />
-                <ScoreRing value={report.health.nutrition_score} name="Nutrition" color="#f59e0b" />
-                <ScoreRing value={report.health.water_score} name="Water Level" color="#3b82f6" />
-                <ScoreRing value={report.health.disease_risk} name="Disease Risk" color="#ef4444" inverted={true} />
-              </div>
-
-              <div className="npk-section">
-                <div className="npk-title">⚗️ Mineral Deficiency Levels (Higher = More Deficient)</div>
-                <NpkBar name="🟢 Nitrogen (N)" value={report.health.mineral_deficiency.Nitrogen} color="#22c55e" />
-                <NpkBar name="🟠 Phosphorus (P)" value={report.health.mineral_deficiency.Phosphorus} color="#f97316" />
-                <NpkBar name="🟣 Potassium (K)" value={report.health.mineral_deficiency.Potassium} color="#a855f7" />
+                <ScoreRing value={report.health_score} name="Overall Health" color="#22c55e" />
+                <ScoreRing value={report.metrics.leaf_health} name="Leaf Health" color="#10b981" />
+                <ScoreRing value={report.metrics.soil_health} name="Soil Health" color="#8b5cf6" />
+                <ScoreRing value={report.metrics.water_score} name="Water Score" color="#3b82f6" />
+                <ScoreRing value={report.metrics.environment_score} name="Environment" color="#f59e0b" />
+                <ScoreRing value={report.metrics.disease_impact} name="Disease Impact" color="#ef4444" inverted={true} />
               </div>
             </div>
 
-            {/* INSIGHTS */}
+            {/* ISSUES & DISEASE */}
             <div className="card" style={{ marginBottom: '1rem' }}>
-              <div className="card-title">💡 AI Insights & Explanation</div>
-              <div className="card-desc">Simple explanation of your crop's condition in farmer-friendly language.</div>
-              <div className="insights-grid">
-                <div className="insight-box good">
-                  <div className="insight-box-label">✅ What's Good</div>
-                  <div className="insight-box-text">{report.insights.what_is_good}</div>
-                </div>
+              <div className="card-title">⚠️ Detected Issues & Disease Analysis</div>
+              <div className="card-desc">Based on visual symptoms, location, and weather conditions.</div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                 <div className="insight-box bad">
-                  <div className="insight-box-label">⚠️ What Needs Attention</div>
-                  <div className="insight-box-text">{report.insights.what_is_wrong}</div>
+                  <div className="insight-box-label">🚨 Issues Detected</div>
+                  <ul style={{ margin: '0.5rem 0 0 1.25rem', color: '#fca5a5' }}>
+                    {report.issues_detected.map((issue, i) => <li key={i}>{issue}</li>)}
+                  </ul>
                 </div>
+
+                <div className="insight-box info" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)' }}>
+                  <div className="insight-box-label" style={{ color: '#fcd34d' }}>🦠 Disease & Pest Status</div>
+                  <div style={{ marginTop: '0.5rem', color: '#fcd34d', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <div><strong>Name:</strong> {report.disease_pest.name}</div>
+                    <div><strong>Severity:</strong> {report.disease_pest.severity}</div>
+                    <div><strong>Spread Risk:</strong> {report.disease_pest.spread_risk}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* DETAILED ANALYSIS */}
+            <div className="card" style={{ marginBottom: '1rem' }}>
+              <div className="card-title">🔬 Detailed Environment Analysis</div>
+              <div className="card-desc">In-depth reasoning behind the scores and recommendations.</div>
+              <div className="insights-grid">
                 <div className="insight-box info">
-                  <div className="insight-box-label">📈 Why These Scores</div>
-                  <div className="insight-box-text">{report.insights.why_scores}</div>
+                  <div className="insight-box-label">🌍 Environment</div>
+                  <div className="insight-box-text">{report.analysis.environment}</div>
+                </div>
+                <div className="insight-box info" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>
+                  <div className="insight-box-label">💧 Water</div>
+                  <div className="insight-box-text">{report.analysis.water}</div>
+                </div>
+                <div className="insight-box info" style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)' }}>
+                  <div className="insight-box-label">🌱 Soil</div>
+                  <div className="insight-box-text">{report.analysis.soil}</div>
                 </div>
               </div>
             </div>
 
             {/* SOLUTIONS */}
             <div className="card" style={{ marginBottom: '1rem' }}>
-              <div className="card-title">💊 Solutions & Treatments</div>
-              <div className="card-desc">Practical and actionable solutions to improve your crop health.</div>
-              <div className="solutions-grid">
-                <div className="solution-card">
-                  <div className="solution-card-title" style={{ color: '#22c55e' }}>🏡 Gharelu Nuske</div>
-                  <ul className="solution-list">
-                    {report.solutions.gharelu_nuske.map((s, i) => <li key={i}>{s}</li>)}
-                  </ul>
-                </div>
-                <div className="solution-card">
-                  <div className="solution-card-title" style={{ color: '#f59e0b' }}>🧪 Fertilizers</div>
-                  <ul className="solution-list">
-                    {report.solutions.recommended_fertilizers.map((s, i) => <li key={i}>{s}</li>)}
-                  </ul>
-                </div>
-                <div className="solution-card">
-                  <div className="solution-card-title" style={{ color: '#3b82f6' }}>💧 Watering Tips</div>
-                  <ul className="solution-list">
-                    {report.solutions.watering_suggestions.map((s, i) => <li key={i}>{s}</li>)}
-                  </ul>
-                </div>
-                {report.solutions.disease_treatment.length > 0 && (
-                  <div className="solution-card">
-                    <div className="solution-card-title" style={{ color: '#ef4444' }}>🌿 Disease Treatment</div>
-                    <ul className="solution-list">
-                      {report.solutions.disease_treatment.map((s, i) => <li key={i}>{s}</li>)}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* ACTION PLAN */}
-            <div className="card" style={{ marginBottom: '1rem' }}>
-              <div className="card-title">🗺️ Action Plan</div>
-              <div className="card-desc">Follow these steps to improve your crop's health and yield.</div>
+              <div className="card-title">💡 Smart Recommendations</div>
+              <div className="card-desc">Practical, localized, and actionable advice to improve crop health.</div>
               <div className="action-plan">
-                <div className="action-plan-header">🚜 Your 5-Step Improvement Plan</div>
-                {report.solutions.action_plan.map((step, i) => (
+                <div className="action-plan-header">🚜 Recommended Actions</div>
+                {report.recommendations.map((rec, i) => (
                   <div className="action-step" key={i}>
-                    <div className="action-step-num">{i + 1}</div>
-                    <div className="action-step-text">{step.replace(/^Step \d+:\s*/i, '')}</div>
+                     <div className="action-step-num">✓</div>
+                     <div className="action-step-text" style={{ padding: '0.5rem 0' }}>{rec}</div>
                   </div>
                 ))}
               </div>

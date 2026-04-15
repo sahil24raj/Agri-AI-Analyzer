@@ -15,11 +15,11 @@ export async function analyzeImage(imageBase64: string, mimeType: string, locati
   return response.json();
 }
 
-export async function generateFullReport(imageBase64: string, mimeType: string, cropData: CropAnalysis, location: string): Promise<FullReport> {
+export async function generateFullReport(imageBase64: string, mimeType: string, cropData: CropAnalysis, location: string, weather: any): Promise<FullReport> {
   const response = await fetch('/api/report', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageBase64, mimeType, cropData, location }),
+    body: JSON.stringify({ imageBase64, mimeType, cropData, location, weather }),
   });
 
   if (!response.ok) {

@@ -23,12 +23,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 ${location ? `The user is located at or near: ${location}. Take this local climate, common soil, and geography into account.` : ''}
 Detect and predict:
 1. Crop Type (e.g., wheat, rice, maize, tomato, etc.)
-2. Soil Type (e.g., sandy, clay, loamy, black soil, etc.)
-3. Estimated Temperature Range (in °C based on crop/environment)
+2. Disease or Pest Name (if any healthy, write "None")
+3. Affected Area (visual percentage of the crop damaged, e.g., "30%". If healthy, write "0%")
+4. Soil Type (e.g., sandy, clay, loamy, black soil, etc.)
+5. Estimated Temperature Range (in °C based on crop/environment)
 
 Return ONLY valid JSON in this exact format:
 {
   "crop_type": "...",
+  "disease": "...",
+  "affected_area": "...",
   "soil_type": "...",
   "temperature": "...",
   "confidence": "0-100%"

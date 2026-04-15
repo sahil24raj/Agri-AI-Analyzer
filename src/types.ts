@@ -1,41 +1,40 @@
 export interface CropAnalysis {
   crop_type: string;
+  disease?: string;
+  affected_area?: string;
   soil_type: string;
   temperature: string;
   confidence: string;
 }
 
-export interface HealthAnalysis {
-  crop_health_score: number;
-  nutrition_score: number;
+export interface DiseasePest {
+  name: string;
+  severity: string;
+  spread_risk: string;
+}
+
+export interface DetailedAnalysis {
+  environment: string;
+  water: string;
+  soil: string;
+}
+
+export interface HealthMetrics {
+  leaf_health: number;
+  soil_health: number;
   water_score: number;
-  disease_risk: number;
-  mineral_deficiency: {
-    Nitrogen: number;
-    Phosphorus: number;
-    Potassium: number;
-  };
-}
-
-export interface Solutions {
-  gharelu_nuske: string[];
-  recommended_fertilizers: string[];
-  watering_suggestions: string[];
-  disease_treatment: string[];
-  action_plan: string[];
-}
-
-export interface Insights {
-  what_is_good: string;
-  what_is_wrong: string;
-  why_scores: string;
+  environment_score: number;
+  disease_impact: number;
 }
 
 export interface FullReport {
-  analysis: CropAnalysis;
-  health: HealthAnalysis;
-  insights: Insights;
-  solutions: Solutions;
+  crop: string;
+  health_score: number;
+  metrics: HealthMetrics;
+  issues_detected: string[];
+  disease_pest: DiseasePest;
+  analysis: DetailedAnalysis;
+  recommendations: string[];
 }
 
 export type AppStep = 'upload' | 'verifying' | 'confirmed' | 'analyzing' | 'results';
