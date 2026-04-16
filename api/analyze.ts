@@ -1,16 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not configured' });
+    return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
   }
+
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   try {
     const { imageBase64, mimeType, location, language = 'en' } = req.body;
@@ -42,45 +42,39 @@ DO NOT use English for values if the requested language is not English. ONLY the
   "confidence": "0-100%"
 }
 
-If unsure, give best possible estimation instead of refusing.`;
+If unsure, give best possible estimation instead of refusing. Respond only with JSON.`;
 
-    const response = await fetch(GROQ_API_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.2-90b-vision-preview',
-        messages: [
+        contents: [
           {
-            role: 'system',
-            content: `You are an advanced Agri-AI assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: You must translate EVERY string value in the JSON response to the language code '${language}'. The JSON keys must remain strictly in English.`,
-          },
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: prompt },
+            parts: [
+              { text: prompt },
               {
-                type: 'image_url',
-                image_url: { url: `data:${mimeType};base64,${imageBase64}` },
+                inline_data: {
+                  mime_type: mimeType,
+                  data: imageBase64,
+                },
               },
             ],
           },
         ],
-        max_tokens: 1024,
-        temperature: 0.3,
-        response_format: { type: 'json_object' },
+        generationConfig: {
+          response_mime_type: 'application/json',
+          temperature: 0.3,
+        },
       }),
     });
 
     if (!response.ok) {
       const err = await response.json();
-      return res.status(response.status).json({ error: err?.error?.message || 'Groq API error' });
+      return res.status(response.status).json({ error: err?.error?.message || 'Gemini API error' });
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || '{}';
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
 
     // Server-side delay of 3 seconds as requested
     await new Promise(resolve => setTimeout(resolve, 3000));

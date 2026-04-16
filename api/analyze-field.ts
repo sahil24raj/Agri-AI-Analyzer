@@ -1,16 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not configured' });
+    return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
   }
+
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   try {
     const { fieldImageBase64, fieldImageMimeType, language = 'en' } = req.body;
@@ -32,7 +32,7 @@ Generate a comprehensive JSON report containing EXACTLY these fields:
 CRITICAL LANGUAGE RULE: 
 You MUST entirely translate ALL string VALUES inside this JSON into the language code "${language}". This is fully mandatory!
 DO NOT use English for values if the requested language is not English. ONLY the exact JSON keys must remain in English.
-Do NOT use markdown code blocks, just raw JSON.
+
 {
   "total_affected_percent": "e.g., 30%",
   "infection_pattern": "e.g., Localized in the North-East",
@@ -52,42 +52,37 @@ Do NOT use markdown code blocks, just raw JSON.
 
 Keep language simple and farmer-friendly in the target language. Be highly detailed. Return ONLY valid JSON.`;
 
-    const userContent: any[] = [
-      { type: 'text', text: prompt },
-      { type: 'image_url', image_url: { url: `data:${fieldImageMimeType};base64,${fieldImageBase64}` } }
-    ];
-
-    const response = await fetch(GROQ_API_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.2-90b-vision-preview',
-        messages: [
+        contents: [
           {
-            role: 'system',
-            content: `You are a precision farming assistant. Always respond with valid JSON only, no extra text or markdown. CRITICAL: Translate EVERY string value to '${language}'. JSON keys must remain in English.`,
-          },
-          {
-            role: 'user',
-            content: userContent,
+            parts: [
+              { text: prompt },
+              {
+                inline_data: {
+                  mime_type: fieldImageMimeType,
+                  data: fieldImageBase64,
+                },
+              },
+            ],
           },
         ],
-        max_tokens: 1024,
-        temperature: 0.3,
-        response_format: { type: 'json_object' },
+        generationConfig: {
+          response_mime_type: 'application/json',
+          temperature: 0.3,
+        },
       }),
     });
 
     if (!response.ok) {
       const err = await response.json();
-      return res.status(response.status).json({ error: err?.error?.message || 'Groq API error' });
+      return res.status(response.status).json({ error: err?.error?.message || 'Gemini API error' });
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || '{}';
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     // Server-side delay of 3 seconds as requested
     await new Promise(resolve => setTimeout(resolve, 3000));
