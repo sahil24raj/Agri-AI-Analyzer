@@ -79,14 +79,41 @@ export default function App() {
     setTimeout(() => setToast(null), 4000);
   }
 
-  function fileToBase64(file: File): Promise<string> {
-    return new Promise((res, rej) => {
+
+
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = () => res((reader.result as string).split(',')[1]);
-      reader.onerror = rej;
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_DIM = 1280;
+          if (width > height) {
+            if (width > MAX_DIM) {
+              height *= MAX_DIM / width;
+              width = MAX_DIM;
+            }
+          } else {
+            if (height > MAX_DIM) {
+              width *= MAX_DIM / height;
+              height = MAX_DIM;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl.split(',')[1]);
+        };
+        img.src = e.target?.result as string;
+      };
       reader.readAsDataURL(file);
     });
-  }
+  };
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -96,8 +123,9 @@ export default function App() {
     setImageFile(file);
     setImageMime(file.type);
     setImagePreview(URL.createObjectURL(file));
-    const b64 = await fileToBase64(file);
+    const b64 = await compressImage(file);
     setImageBase64(b64);
+    setImageMime('image/jpeg'); // Always JPEG after compression
 
     if (navigator.geolocation) {
       setIsLocating(true);
@@ -157,8 +185,9 @@ export default function App() {
     setFieldImageFile(file);
     setFieldImageMime(file.type);
     setFieldImagePreview(URL.createObjectURL(file));
-    const b64 = await fileToBase64(file);
+    const b64 = await compressImage(file);
     setFieldImageBase64(b64);
+    setFieldImageMime('image/jpeg'); // Always JPEG after compression
   }, []);
 
   const onFieldDrop = useCallback((e: React.DragEvent) => {
@@ -261,7 +290,6 @@ export default function App() {
           >
             {languages.map(l => <option key={l.code} value={l.code}>{l.name}</option>)}
           </select>
-          <div className="header-badge">⚡ Groq + Llama 4</div>
         </div>
       </header>
 

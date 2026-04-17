@@ -2,7 +2,7 @@
 
 An AI-powered web application that analyzes crop images and provides detailed health reports, mineral deficiency analysis, home remedies, fertilizer recommendations, and actionable improvement plans for farmers.
 
-**Powered by Groq + Llama 4 Scout Vision AI**
+**Powered by Google Gemini 2.5 Flash**
 
 ---
 
@@ -34,7 +34,7 @@ In Vercel project settings → **Environment Variables**, add:
 
 | Key | Value |
 |-----|-------|
-| `GROQ_API_KEY` | Your Groq API key from [console.groq.com/keys](https://console.groq.com/keys) |
+| `GEMINI_API_KEY` | Your Gemini API key from [aistudio.google.com](https://aistudio.google.com/app/apikey) |
 
 ### 3. Deploy!
 Click **Deploy** — Vercel will build the Vite app and set up the serverless API routes automatically.
@@ -45,7 +45,7 @@ Click **Deploy** — Vercel will build the Vite app and set up the serverless AP
 
 - **Frontend**: React + TypeScript + Vite
 - **Styling**: Custom CSS (dark theme, nature-inspired palette)
-- **AI**: Groq API with Llama 4 Scout 17B (vision model)
+- **AI**: Gemini API with Gemini 2.5 Flash (vision model)
 - **Backend**: Vercel Serverless Functions (Node.js)
 - **Deployment**: Vercel
 
@@ -64,11 +64,11 @@ Click **Deploy** — Vercel will build the Vite app and set up the serverless AP
 └── index.html            # Entry point
 ```
 
-## 🔑 Getting a Groq API Key (Free)
+## 🔑 Getting a Gemini API Key (Free)
 
-1. Go to [console.groq.com](https://console.groq.com)
+1. Go to [aistudio.google.com](https://aistudio.google.com)
 2. Sign up / Sign in
-3. Go to **API Keys** → **Create API Key**
+3. Go to **Get API key** → **Create API key**
 4. Copy the key and add it to Vercel env vars
 
 ---
