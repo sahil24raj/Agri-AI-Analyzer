@@ -4,10 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Crop Detector — AI Agricultural Intelligence</title>
-    <meta name="description" content="Upload crop images and get instant AI-powered analysis: crop detection, soil type, health scores, mineral deficiency, and actionable solutions in farmer-friendly language." />
+    <title>Agri AI Analyzer — Smart Farm Intelligence</title>
+    <meta name="description" content="Professional agricultural AI analysis for crops and fields. Get instant health reports, pest detection, and precision farm zoning." />
   </head>
   <body>
+    <!-- 3D Moving Leaves Background -->
+    <div class="leaf-scene" id="leafScene"></div>
+    <script>
+      const scene = document.getElementById('leafScene');
+      const leafCount = 15;
+      for (let i = 0; i < leafCount; i++) {
+        const leaf = document.createElement('div');
+        leaf.className = 'leaf';
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.animationDelay = Math.random() * 15 + 's';
+        leaf.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        leaf.style.opacity = Math.random() * 0.3 + 0.1;
+        const size = Math.random() * 20 + 20 + 'px';
+        leaf.style.width = size;
+        leaf.style.height = size;
+        scene.appendChild(leaf);
+      }
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

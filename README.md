@@ -1,6 +1,6 @@
-# 🌾 Smart Crop Detector — AI Agricultural Intelligence
+# 🌾 Agri AI Analyzer — Smart Farm Intelligence
 
-An AI-powered web application that analyzes crop images and provides detailed health reports, mineral deficiency analysis, home remedies, fertilizer recommendations, and actionable improvement plans for farmers.
+Professional agricultural AI analysis for crops and fields. Get instant health reports, pest detection, and precision farm zoning using Gemini AI.
 
 **Powered by Google Gemini 2.5 Flash**
 

@@ -277,7 +277,7 @@ export default function App() {
     <>
       {/* HEADER */}
       <header className="header">
-        <div className="header-logo">🌾</div>
+        <div className="header-logo"><img src="/logo.png" alt="Agri AI Analyzer" /></div>
         <div style={{ flex: 1 }}>
           <div className="header-title">{t('app_title')}</div>
           <div className="header-sub">{t('app_subtitle')}</div>
@@ -286,7 +286,8 @@ export default function App() {
           <select 
             value={language} 
             onChange={(e) => setLanguage(e.target.value)}
-            style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: '#1e293b', color: '#fff', border: '1px solid #334155', outline: 'none', cursor: 'pointer', fontWeight: 500 }}
+            className="language-selector"
+            style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: 'var(--bg-card)', color: '#fff', border: '1px solid var(--border)', outline: 'none', cursor: 'pointer', fontWeight: 500 }}
           >
             {languages.map(l => <option key={l.code} value={l.code}>{l.name}</option>)}
           </select>
@@ -296,20 +297,20 @@ export default function App() {
       <main className="app-container">
 
         {/* TABS */}
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid #334155', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <button 
             className={`btn ${activeTab === 'crop' ? 'btn-primary' : 'btn-outline'}`} 
             onClick={() => { setActiveTab('crop'); resetApp(); }}
             style={{ flex: 1 }}
           >
-            🌱 Crop Analyzer
+            🌾 {t('crop_analyzer_tab') || 'Crop Analyzer'}
           </button>
           <button 
             className={`btn ${activeTab === 'field' ? 'btn-primary' : 'btn-outline'}`} 
             onClick={() => { setActiveTab('field'); resetApp(); }}
             style={{ flex: 1 }}
           >
-            🗺️ Field Analyzer
+            🚜 {t('field_analyzer_tab') || 'Field Analyzer'}
           </button>
         </div>
 

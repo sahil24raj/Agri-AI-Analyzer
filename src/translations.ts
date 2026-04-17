@@ -22,7 +22,7 @@ export const languages = [
 
 export const translations: Translations = {
   en: {
-    app_title: "Smart Crop Detector",
+    app_title: "Agri AI Analyzer",
     app_subtitle: "Upload a photo of your crop to instantly identify diseases, analyze plant health, and get practical local solutions.",
     dropzone_title: "Drop your crop image here",
     dropzone_sub: "or click to browse · JPG, PNG, WEBP supported",
@@ -38,10 +38,12 @@ export const translations: Translations = {
     edit_details: "Edit Details",
     cancel_edit: "Cancel Edit",
     start_over: "Start Over",
-    analyze_another: "Analyze Another Crop"
+    analyze_another: "Analyze Another Crop",
+    crop_analyzer_tab: "Crop Analyzer",
+    field_analyzer_tab: "Field Analyzer"
   },
   hi: {
-    app_title: "स्मार्ट फसल डिटेक्टर",
+    app_title: "एग्री एआई एनालाइजर",
     app_subtitle: "रोगों की पहचान करने, पौधों के स्वास्थ्य का विश्लेषण करने और स्थानीय समाधान प्राप्त करने के लिए अपनी फसल की फोटो अपलोड करें।",
     dropzone_title: "अपनी फसल की तस्वीर यहाँ डालें",
     dropzone_sub: "या ब्राउज़ करने के लिए क्लिक करें · JPG, PNG, WEBP मान्य हैं",
@@ -57,10 +59,12 @@ export const translations: Translations = {
     edit_details: "विवरण संपादित करें",
     cancel_edit: "संपादन रद्द करें",
     start_over: "फिर से शुरू करें",
-    analyze_another: "दूसरी फसल का विश्लेषण करें"
+    analyze_another: "दूसरी फसल का विश्लेषण करें",
+    crop_analyzer_tab: "फसल विश्लेषक",
+    field_analyzer_tab: "खेत विश्लेषक"
   },
   pa: {
-    app_title: "ਸਮਾਰਟ ਫਸਲ ਡਿਟੈਕਟਰ",
+    app_title: "ਐਗਰੀ ਏਆਈ ਐਨਾਲਾਈਜ਼ਰ",
     app_subtitle: "ਬਿਮਾਰੀਆਂ ਦੀ ਪਛਾਣ ਕਰਨ, ਪੌਦਿਆਂ ਦੀ ਸਿਹਤ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਨ ਅਤੇ ਹੱਲ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਆਪਣੀ ਫਸਲ ਦੀ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ।",
     dropzone_title: "ਆਪਣੀ ਫਸਲ ਦੀ ਫੋਟੋ ਇੱਥੇ ਛੱਡੋ",
     dropzone_sub: "ਜਾਂ ਬ੍ਰਾਊਜ਼ ਕਲਿੱਕ ਕਰੋ · JPG, PNG, WEBP ਦਾ ਸਮਰਥਨ ਹੈ",
@@ -79,7 +83,7 @@ export const translations: Translations = {
     analyze_another: "ਕਿਸੇ ਹੋਰ ਫਸਲ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ"
   },
   hr: {
-    app_title: "स्मार्ट फसल डिटेक्टर",
+    app_title: "एग्री एआई एनालाइजर",
     app_subtitle: "बिमारियां की पहचान करण और फसल का हाल जाणन खातिर अपनी फसल की फोटो अपलोड करो।",
     dropzone_title: "अपनी फसल की फोटो अड़े गेरो",
     dropzone_sub: "या ढूंडण खातिर क्लिक करो · JPG, PNG, WEBP चाल ज्यागी",
@@ -98,7 +102,7 @@ export const translations: Translations = {
     analyze_another: "दूसरी फसल की जांच करो"
   },
   gu: {
-    app_title: "સ્માર્ટ પાક ડિટેક્ટર",
+    app_title: "એગ્રી એઆઈ એનાલાઇઝર",
     app_subtitle: "રોગો ઓળખવા, છોડના સ્વાસ્થ્યનું વિશ્લેષણ કરવા અને ઉપાયો મેળવવા માટે તમારા પાકનો ફોટો અપલોડ કરો.",
     dropzone_title: "તમારા પાકનો ફોટો અહીં મુકો",
     dropzone_sub: "અથવા બ્રાઉઝ કરવા માટે ક્લિક કરો · JPG, PNG, WEBP સપોર્ટેડ",
@@ -117,7 +121,7 @@ export const translations: Translations = {
     analyze_another: "અન્ય પાકનું વિશ્લેષણ કરો"
   },
   mr: {
-    app_title: "स्मार्ट पीक शोधक",
+    app_title: "एग्री एआय ॲनालायझर",
     app_subtitle: "रोग ओळखण्यासाठी आणि उपायांसाठी तुमच्या पिकाचा फोटो अपलोड करा.",
     dropzone_title: "तुमच्या पिकाचा फोटो इथे टाका",
     dropzone_sub: "किंवा शोधण्यासाठी क्लिक करा · JPG, PNG, WEBP समर्थित",
@@ -136,7 +140,7 @@ export const translations: Translations = {
     analyze_another: "दुसऱ्या पिकाचे विश्लेषण करा"
   },
   bn: {
-    app_title: "স্মার্ট ফসল শনাক্তকারী",
+    app_title: "এগ্রি এআই অ্যানালাইজার",
     app_subtitle: "রোগ সনাক্ত করতে এবং সমাধান পেতে আপনার ফসলের ছবি আপলোড করুন।",
     dropzone_title: "আপনার ফসলের ছবি এখানে দিন",
     dropzone_sub: "বা ব্রাউজ করতে ক্লিক করুন · JPG, PNG, WEBP সমর্থিত",
@@ -155,7 +159,7 @@ export const translations: Translations = {
     analyze_another: "অন্য ফসলের বিশ্লেষণ করুন"
   },
   ta: {
-    app_title: "ஸ்மார்ட் பயிர் டிடெக்டர்",
+    app_title: "அக்ரி ஏஐ அனலைசர்",
     app_subtitle: "நோய்களைக் கண்டறியவும் பயிரின் ஆரோக்கியத்தை அறியவும் புகைப்படத்தைப் பதிவேற்றவும்.",
     dropzone_title: "பயிர் படத்தை இங்கே விடவும்",
     dropzone_sub: "அல்லது கிளிக் செய்யவும் · JPG, PNG, WEBP ஆதரவு",
@@ -174,7 +178,7 @@ export const translations: Translations = {
     analyze_another: "வேறு பயிரை ஆராய்க"
   },
   te: {
-    app_title: "స్మార్ట్ క్రాప్ డిటెక్టర్",
+    app_title: "అగ్రి ఏఐ అనలైజర్",
     app_subtitle: "వ్యాధులను గుర్తించడానికి మీ పంట ఫోటోను అప్‌లోడ్ చేయండి.",
     dropzone_title: "మీ పంట ఫోటో ఇక్కడ వదలండి",
     dropzone_sub: "లేక క్లిక్ చేయండి · JPG, PNG, WEBP మద్దతు ఇస్తుంది",
@@ -193,7 +197,7 @@ export const translations: Translations = {
     analyze_another: "మరొక పంటను విశ్లేషించండి"
   },
   kn: {
-    app_title: "ಸ್ಮಾರ್ಟ್ ಬೆಳೆ ಪತ್ತೆಕಾರಕ",
+    app_title: "ಅಗ್ರಿ ಎಐ ಅನಲೈಜರ್",
     app_subtitle: "ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು ನಿಮ್ಮ ಬೆಳೆಯ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
     dropzone_title: "ಬೆಳೆಯ ಚಿತ್ರವನ್ನು ಇಲ್ಲಿ ಹಾಕಿ",
     dropzone_sub: "ಅಥವಾ ಕ್ಲಿಕ್ ಮಾಡಿ · JPG, PNG, WEBP ಬೆಂಬಲಿಸುತ್ತದೆ",
@@ -212,7 +216,7 @@ export const translations: Translations = {
     analyze_another: "ಇನ್ನೊಂದು ಬೆಳೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ"
   },
   ml: {
-    app_title: "സ്മാർട്ട് ക്രോപ്പ് ഡിറ്റക്ടർ",
+    app_title: "അഗ്രി എഐ അനലൈസർ",
     app_subtitle: "രോഗങ്ങൾ തിരിച്ചറിയാൻ നിങ്ങളുടെ വിളയുടെ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക.",
     dropzone_title: "ചിത്രം ഇവിടെ ഇടുക",
     dropzone_sub: "അല്ലെങ്കിൽ ക്ലിക്ക് ചെയ്യുക · JPG, PNG, WEBP അനുയോജ്യമാണ്",
@@ -231,7 +235,7 @@ export const translations: Translations = {
     analyze_another: "മറ്റൊരു വിള പരിശോധിക്കുക"
   },
   or: {
-    app_title: "ସ୍ମାର୍ଟ କ୍ରପ୍ ଡିଟେକ୍ଟର୍",
+    app_title: "ଅଗ୍ରି ଏଆଇ ଆନାଲାଇଜର୍",
     app_subtitle: "ରୋଗ ଚିହ୍ନଟ କରିବା ପାଇଁ ଆପଣଙ୍କ ଫସଲର ଫଟୋ ଅପଲୋଡ୍ କରନ୍ତୁ।",
     dropzone_title: "ଫସଲର ଫଟୋ ଏଠାରେ ପକାନ୍ତୁ",
     dropzone_sub: "କିମ୍ବା କ୍ଲିକ୍ କରନ୍ତୁ · JPG, PNG, WEBP ସମର୍ଥିତ",
@@ -250,7 +254,7 @@ export const translations: Translations = {
     analyze_another: "ଅନ୍ୟ ଏକ ଫସଲ ଯାଞ୍ଚ କରନ୍ତୁ"
   },
   as: {
-    app_title: "স্মাৰ্ট শস্য ধৰা যন্ত্ৰ",
+    app_title: "এগ্ৰি এআই এনালাইজাৰ",
     app_subtitle: "ৰোগ চিনাক্ত কৰিবলৈ আপোনাৰ শস্যৰ ফটো আপলোড কৰক।",
     dropzone_title: "শস্যৰ ফটো ইয়াত দিয়ক",
     dropzone_sub: "বা ক্লিক কৰক · JPG, PNG, WEBP সমৰ্থিত",

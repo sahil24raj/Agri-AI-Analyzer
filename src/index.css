@@ -1,24 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #22c55e;
-  --primary-dark: #16a34a;
-  --primary-light: #4ade80;
-  --accent: #f59e0b;
-  --accent-dark: #d97706;
-  --bg: #0a0f0d;
-  --bg-card: #111a14;
-  --bg-card2: #162019;
-  --border: rgba(34, 197, 94, 0.15);
-  --border-strong: rgba(34, 197, 94, 0.35);
-  --text: #f0fdf4;
-  --text-muted: #86efac;
-  --text-dim: #4b7a5e;
+  --primary: #1a2e1a; /* Deeper Forest Green */
+  --primary-dark: #0d1a0d;
+  --primary-light: #2d4d2d;
+  --accent: #d4af37; /* Wheat Gold */
+  --accent-dark: #b8860b;
+  --bg: #050a06; /* Charcoal / Deep Black-Green */
+  --bg-card: #0d140e;
+  --bg-card2: #121b13;
+  --border: rgba(212, 175, 55, 0.1);
+  --border-strong: rgba(212, 175, 55, 0.3);
+  --text: #f0f7f1;
+  --text-muted: #c8dcd0;
+  --text-dim: #8ba793;
   --danger: #ef4444;
   --warning: #f59e0b;
   --info: #3b82f6;
-  --shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
-  --glow: 0 0 20px rgba(34, 197, 94, 0.12);
+  --shadow: 0 8px 48px rgba(0, 0, 0, 0.9);
+  --glow: 0 0 32px rgba(212, 175, 55, 0.08);
+  --clay: #5d4037;
 }
 
 * {
@@ -40,10 +41,53 @@ body::before {
   position: fixed;
   inset: 0;
   background: 
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(34, 197, 94, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(26, 46, 26, 0.2) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
+}
+
+/* 3D LEAF ANIMATION */
+.leaf-scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.leaf {
+  position: absolute;
+  top: -10%;
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0C15 0 25 10 25 20C25 25 20 28 15 30C10 28 5 25 5 20C5 10 15 0 15 0Z' fill='%231a2e1a' fill-opacity='0.15'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: fall linear infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-50px) translateX(0) rotateX(0) rotateY(0) rotateZ(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(110vh) translateX(100px) rotateX(360deg) rotateY(720deg) rotateZ(180deg);
+    opacity: 0;
+  }
 }
 
 #root {
@@ -53,28 +97,36 @@ body::before {
 
 /* HEADER */
 .header {
-  padding: 1.25rem 2rem;
+  padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(10, 15, 13, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(13, 19, 14, 0.8);
+  backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
 .header-logo {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+  width: 48px;
+  height: 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+  overflow: hidden;
+  box-shadow: 0 0 16px rgba(45, 90, 39, 0.3);
+}
+
+.header-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .header-title {
@@ -293,7 +345,8 @@ body::before {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
   color: #fff;
-  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 4px 16px rgba(45, 90, 39, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
