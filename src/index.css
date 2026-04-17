@@ -131,12 +131,23 @@ body::before {
 
 .header-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, var(--primary-light), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff; /* pure white for maximum visibility */
+  text-shadow: 0 0 15px rgba(74, 222, 128, 0.6), 0 0 30px rgba(0, 0, 0, 1);
+  letter-spacing: -0.01em;
+  background: none;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
+}
+
+.header-title-wrap {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  display: inline-block;
 }
 
 .header-sub {

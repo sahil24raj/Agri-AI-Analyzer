@@ -279,8 +279,10 @@ export default function App() {
       <header className="header">
         <div className="header-logo"><img src="/logo.png" alt="Agri AI Analyzer" /></div>
         <div style={{ flex: 1 }}>
-          <div className="header-title">{t('app_title')}</div>
-          <div className="header-sub">{t('app_subtitle')}</div>
+          <div className="header-title-wrap">
+            <div className="header-title">{t('app_title')}</div>
+            <div className="header-sub" style={{ color: '#fff', opacity: 0.8 }}>{t('app_subtitle')}</div>
+          </div>
         </div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <select 
