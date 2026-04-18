@@ -10,7 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
   }
 
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   try {
     const { fieldImageBase64, fieldImageMimeType, language = 'en' } = req.body;
@@ -115,17 +115,37 @@ Return ONLY valid JSON.`;
     });
 
     if (!response.ok) {
-      const err = await response.json();
+      const err = await response.json().catch(() => ({}));
       return res.status(response.status).json({ error: err?.error?.message || 'Gemini API error' });
     }
 
     const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
-    // Server-side delay of 3 seconds as requested
+    // Clean up markdown code blocks and extract JSON
+    let cleanContent = rawContent.trim();
+    if (cleanContent.includes('```json')) {
+      cleanContent = cleanContent.split('```json')[1].split('```')[0].trim();
+    } else if (cleanContent.includes('```')) {
+      cleanContent = cleanContent.split('```')[1].split('```')[0].trim();
+    }
+
+    // Server-side delay as requested
     await new Promise(resolve => setTimeout(resolve, 3000));
 
-    return res.status(200).json(JSON.parse(content));
+    try {
+      const result = JSON.parse(cleanContent);
+      return res.status(200).json(result);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError, 'Content:', cleanContent);
+      // Fallback: If cleaning failed but raw content might be valid JSON
+      try {
+        const fallbackResult = JSON.parse(rawContent.replace(/```json/g, '').replace(/```/g, '').trim());
+        return res.status(200).json(fallbackResult);
+      } catch (e) {
+        return res.status(500).json({ error: 'Failed to parse AI response' });
+      }
+    }
   } catch (error: unknown) {
     return res.status(500).json({ error: (error as Error).message || 'Internal server error' });
   }
