@@ -657,7 +657,12 @@ export default function App() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                     <div className="insight-box info" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>
                       <div className="insight-box-label" style={{ color: '#60a5fa' }}>⏰ Irrigation Timing</div>
-                      <div className="insight-box-text" style={{ color: '#93c5fd', marginTop: '0.5rem' }}>{report.irrigation_advice}</div>
+                      <div className="insight-box-text" style={{ color: '#93c5fd', marginTop: '0.5rem' }}>
+                        {typeof report.irrigation_advice === 'string'
+                          ? report.irrigation_advice
+                          : `${report.irrigation_advice?.method || ''} | ${report.irrigation_advice?.quantity_liters_per_acre_per_day || ''} | ${report.irrigation_advice?.frequency || ''}`
+                        }
+                      </div>
                     </div>
                     <div className="insight-box info" style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)' }}>
                       <div className="insight-box-label" style={{ color: '#34d399' }}>📊 Similar Case Insight</div>
@@ -671,6 +676,12 @@ export default function App() {
                   <div className="card-desc">Step-by-step treatment schedule.</div>
                   
                   <div className="timeline-container" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                     {report.action_plan.today && (
+                       <div className="timeline-item" style={{ borderLeft: '4px solid #a855f7', paddingLeft: '1rem' }}>
+                          <h4 style={{ color: '#a855f7', margin: '0 0 0.5rem 0' }}>🚨 Today: Immediate</h4>
+                          <p style={{ margin: 0, color: 'var(--text-dim)' }}>{report.action_plan.today}</p>
+                       </div>
+                     )}
                      <div className="timeline-item" style={{ borderLeft: '4px solid #ef4444', paddingLeft: '1rem' }}>
                         <h4 style={{ color: '#ef4444', margin: '0 0 0.5rem 0' }}>Day 1-2: Immediate Action</h4>
                         <p style={{ margin: 0, color: 'var(--text-dim)' }}>{report.action_plan.day_1_2}</p>
@@ -685,6 +696,108 @@ export default function App() {
                      </div>
                   </div>
                 </div>
+
+                {/* ── NEW: Farmer Checklist ── */}
+                {report.farmer_checklist && report.farmer_checklist.length > 0 && (
+                  <div className="card" style={{ marginBottom: '1rem', border: '1px solid rgba(168,85,247,0.3)', background: 'rgba(168,85,247,0.05)' }}>
+                    <div className="card-title">✅ Farmer's Priority Checklist</div>
+                    <div className="card-desc">Do these tasks in order — today.</div>
+                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {report.farmer_checklist.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', padding: '0.6rem 0.75rem', background: 'rgba(168,85,247,0.08)', borderRadius: '10px', border: '1px solid rgba(168,85,247,0.2)' }}>
+                          <div style={{ background: '#a855f7', color: '#fff', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>{i + 1}</div>
+                          <div style={{ color: '#e9d5ff', fontSize: '0.9rem' }}>{item}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── NEW: Nutrient Panel ── */}
+                {report.nutrient_panel && (
+                  <div className="card" style={{ marginBottom: '1rem' }}>
+                    <div className="card-title">🧪 Nutrient Status Panel</div>
+                    <div className="card-desc">Soil nutrient levels and correction recommendations.</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
+                      {Object.entries(report.nutrient_panel).map(([key, val]) => val && (
+                        <div key={key} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '10px', border: '1px solid #334155' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{key}</div>
+                          <div style={{ fontSize: '0.85rem', color: '#e2e8f0', marginTop: '0.3rem' }}>{val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── NEW: Yield Loss Forecast ── */}
+                {report.yield_loss_forecast && (
+                  <div className="card" style={{ marginBottom: '1rem' }}>
+                    <div className="card-title">📉 Yield Loss Forecast (If Untreated)</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
+                      {[['7 Days', report.yield_loss_forecast.if_untreated_7days, '#f87171'], ['14 Days', report.yield_loss_forecast.if_untreated_14days, '#ef4444'], ['30 Days', report.yield_loss_forecast.if_untreated_30days, '#b91c1c'], ['With Treatment', report.yield_loss_forecast.with_treatment, '#22c55e']].map(([label, val, color]) => val && (
+                        <div key={String(label)} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '10px', border: '1px solid #334155', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>{label}</div>
+                          <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: String(color), marginTop: '0.25rem' }}>{val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── NEW: Spray Schedule ── */}
+                {report.spray_schedule && report.spray_schedule.length > 0 && (
+                  <div className="card" style={{ marginBottom: '1rem' }}>
+                    <div className="card-title">🗓️ Spray Schedule</div>
+                    <div className="card-desc">Precision spray calendar with products, doses, and timing.</div>
+                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {report.spray_schedule.map((s, i) => (
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr 1fr', gap: '0.5rem', padding: '0.6rem 0.75rem', background: '#0f172a', borderRadius: '10px', border: '1px solid #334155', fontSize: '0.82rem' }}>
+                          <div style={{ color: '#60a5fa', fontWeight: 'bold' }}>{s.day}</div>
+                          <div style={{ color: '#e2e8f0' }}>{s.product}</div>
+                          <div style={{ color: '#94a3b8' }}>{s.dose || s.dose_per_acre}</div>
+                          <div style={{ color: '#fbbf24' }}>{s.timing}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── NEW: Financial Impact ── */}
+                {report.financial_impact && (
+                  <div className="card" style={{ marginBottom: '1rem', border: '1px solid rgba(34,197,94,0.3)', background: 'rgba(34,197,94,0.04)' }}>
+                    <div className="card-title">💰 Financial Impact (per Acre)</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
+                      {[['Loss Without Treatment', report.financial_impact.estimated_loss_per_acre_inr, '#f87171'], ['Recovery After Treatment', report.financial_impact.potential_recovery_after_treatment_inr, '#4ade80'], ['Treatment Cost', report.financial_impact.treatment_cost_estimate_inr, '#fbbf24'], ['Net Benefit', report.financial_impact.net_benefit_of_treatment_inr, '#22c55e']].map(([label, val, color]) => val && (
+                        <div key={String(label)} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '10px', border: '1px solid #334155', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{label}</div>
+                          <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: String(color), marginTop: '0.25rem' }}>{val}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {report.market_price_outlook && (
+                      <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#0f172a', borderRadius: '10px', border: '1px solid #334155', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <div><span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>Mandi Price: </span><span style={{ color: '#4ade80', fontWeight: 'bold' }}>{report.market_price_outlook.expected_price_per_quintal_inr}/quintal</span></div>
+                        <div><span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>Trend: </span><span style={{ color: '#fbbf24', fontWeight: 'bold' }}>{report.market_price_outlook.market_trend}</span></div>
+                        <div><span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>Best Time to Sell: </span><span style={{ color: '#93c5fd' }}>{report.market_price_outlook.best_time_to_sell}</span></div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── NEW: Long-Term Prevention ── */}
+                {report.long_term_prevention && report.long_term_prevention.length > 0 && (
+                  <div className="card" style={{ marginBottom: '1rem' }}>
+                    <div className="card-title">🛡️ Long-Term Prevention Strategy</div>
+                    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {report.long_term_prevention.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', padding: '0.5rem 0.75rem', background: '#0f172a', borderRadius: '10px', border: '1px solid #334155' }}>
+                          <div style={{ color: '#22c55e', fontWeight: 'bold', flexShrink: 0 }}>→</div>
+                          <div style={{ color: '#a7f3d0', fontSize: '0.88rem' }}>{item}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="btn-group" style={{ justifyContent: 'center' }}>
                   <button className="btn btn-primary" onClick={resetApp} id="new-analysis-btn">
@@ -783,7 +896,7 @@ export default function App() {
                     <div className="insight-box info" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', textAlign: 'center' }}>
                       <div className="insight-box-label" style={{ color: '#4ade80' }}>Expected Profit / SqFt</div>
                       <div style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#4ade80', marginTop: '0.5rem' }}>
-                        {fieldReport.savings_insight.expected_profit_per_sqft}
+                        {fieldReport.financial_projections?.expected_profit_per_sqft || fieldReport.savings_insight.expected_profit_per_sqft}
                       </div>
                     </div>
                   </div>
@@ -904,6 +1017,43 @@ export default function App() {
                       </div>
                    </div>
                 </div>
+
+                {/* ── NEW: Field Financial Projections ── */}
+                {fieldReport.financial_projections && (
+                  <div className="card" style={{ marginBottom: '1rem', border: '1px solid rgba(34,197,94,0.3)' }}>
+                    <div className="card-title">💰 Financial Projections (per Acre)</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
+                      {[['Estimated Yield', fieldReport.financial_projections.estimated_yield_quintals_per_acre ? fieldReport.financial_projections.estimated_yield_quintals_per_acre + ' qtl' : null, '#60a5fa'],
+                        ['Yield Loss', fieldReport.financial_projections.yield_loss_percent, '#f87171'],
+                        ['Revenue w/o Treatment', fieldReport.financial_projections.revenue_without_treatment_inr, '#f87171'],
+                        ['Revenue After Treatment', fieldReport.financial_projections.revenue_after_treatment_inr, '#4ade80'],
+                        ['Treatment Cost', fieldReport.financial_projections.treatment_cost_inr, '#fbbf24'],
+                        ['Net Gain', fieldReport.financial_projections.net_gain_from_treatment_inr, '#22c55e'],
+                        ['ROI', fieldReport.financial_projections.roi_percent, '#a78bfa']
+                      ].map(([label, val, color]) => val && (
+                        <div key={String(label)} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '10px', border: '1px solid #334155', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{label}</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: String(color), marginTop: '0.25rem' }}>{val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── NEW: Field Farmer Checklist ── */}
+                {fieldReport.farmer_checklist && fieldReport.farmer_checklist.length > 0 && (
+                  <div className="card" style={{ marginBottom: '1rem', border: '1px solid rgba(168,85,247,0.3)' }}>
+                    <div className="card-title">✅ Priority Action Checklist</div>
+                    <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      {fieldReport.farmer_checklist.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', padding: '0.5rem 0.75rem', background: 'rgba(168,85,247,0.08)', borderRadius: '8px' }}>
+                          <div style={{ color: '#a855f7', fontWeight: 'bold', flexShrink: 0 }}>{i + 1}.</div>
+                          <div style={{ color: '#e9d5ff', fontSize: '0.88rem' }}>{item}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="btn-group" style={{ justifyContent: 'center', marginTop: '1.5rem' }}>
                   <button className="btn btn-primary" onClick={resetApp} id="new-field-analysis-btn">
