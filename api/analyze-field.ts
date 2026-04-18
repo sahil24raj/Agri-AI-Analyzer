@@ -22,82 +22,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'fieldImageBase64 and fieldImageMimeType are required' });
     }
 
-    const prompt = `You are an elite Precision Agriculture AI and Remote Sensing Specialist with deep expertise in Indian farming systems, crop science, and satellite-grade field analysis.
+    const prompt = `You are a Precision Agriculture AI. Analyze this field/crop image and return a detailed JSON report.
 
-You are analyzing a field-level crop image (aerial/drone/ground view). Perform the most advanced precision farming analysis possible.
+ANALYZE:
+1. Identify the crop and its growth stage.
+2. Divide the field into 3-5 zones (A, B, C...) based on visible health variation.
+3. For each zone: condition (Healthy/Mild/Severe), the main issue, and exact treatment action.
+4. Create a 3x3 emoji minimap: 🟩=Healthy, 🟨=Mild, 🟥=Severe.
+5. Assign priority (High/Medium/Low) to each zone.
+6. Recommend Spot or Full-field treatment and % area to treat.
+7. Estimate resources saved by doing spot treatment vs full-field.
+8. Estimate financial projections: yield, revenue, treatment cost, net gain, ROI.
+9. Give 5 priority farmer actions to take today.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FIELD ANALYSIS PROTOCOL (15 steps):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LANGUAGE RULE: Translate ALL string VALUES to language code "${language}". Keep JSON keys in English only.
 
-STEP 1: CROP IDENTIFICATION
-Identify the crop species, estimated variety, and current growth stage.
-
-STEP 2: FIELD SEGMENTATION
-Divide the field into 3-6 logical zones (A, B, C...) based on visible color variation, density, and health pattern.
-For each zone, determine: condition, estimated size percentage, primary issue, severity.
-
-STEP 3: DETAILED ZONE ANALYSIS
-For each zone:
-— Infection type (Fungal/Bacterial/Viral/Pest/Abiotic/Nutrient)
-— Visible symptoms (color, texture, wilting, spotting)
-— Root probable cause
-— Recommended action (specific product + dose if applicable)
-
-STEP 4: ZONE MINIMAP (3x3 emoji grid)
-🟩 = Healthy | 🟨 = Mild Issue | 🟥 = Severe Issue
-Map the field's condition spatially.
-
-STEP 5: PRIORITY RANKING
-Rank zones: High Priority (treat immediately) → Medium → Low (monitor only).
-
-STEP 6: TREATMENT STRATEGY
-Spot treatment vs full-field? Exact % of field to spray. Estimated cost in ₹/acre.
-
-STEP 7: SPRAY PLAN
-Provide a 4-stage spray calendar: Day 1, Day 4, Day 8, Day 15.
-Include product name, dose/acre, dilution, timing (morning/evening), weather condition required.
-
-STEP 8: NUTRIENT ZONING
-Identify which zones show nutrient deficiency signs (yellowing = N, purple = P, brown tips = K, etc.)
-Recommend fertilizer type, quantity per acre, and application method per zone.
-
-STEP 9: IRRIGATION ZONING
-Which zones are water-stressed or waterlogged?
-Recommend irrigation schedule: method, quantity, frequency.
-
-STEP 10: RESOURCE OPTIMIZATION
-Chemical saving %, Water saving %, Labor saving %, Total cost saving in ₹.
-
-STEP 11: FINANCIAL PROJECTIONS
-— Current estimated yield (quintals/acre)
-— Yield loss % from detected issues
-— Revenue at current mandi price (₹/quintal)
-— Revenue after treatment
-— Return on treatment investment (ROI %)
-— Expected profit per sq ft (₹)
-
-STEP 12: SOIL HEALTH ZONING
-Estimate soil carbon, compaction zones, drainage quality per area.
-
-STEP 13: RISK & SPREAD ANALYSIS
-Will the infection spread? Timeline and direction of spread if uncontrolled.
-
-STEP 14: ENVIRONMENTAL SUSTAINABILITY SCORE
-Rate the field's farming practices: soil conservation, water efficiency, chemical load — out of 100.
-
-STEP 15: FARMER'S PRIORITY ACTION LIST
-5 specific actions ranked by urgency.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL LANGUAGE RULE:
-Translate ALL string VALUES into language code: "${language}".
-ONLY JSON keys remain in English. Return ONLY valid JSON. No markdown.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Return ONLY this JSON (no markdown, no extra text):
 
 {
-  "crop": "Crop name and variety 🌱",
-  "growth_stage": "Current growth stage",
+  "crop": "Crop name and emoji",
+  "growth_stage": "Growth stage",
   "field_health": {
     "overall_condition": "Good/Moderate/Poor",
     "total_affected_percent": "XX%",
@@ -107,52 +51,34 @@ ONLY JSON keys remain in English. Return ONLY valid JSON. No markdown.
   },
   "minimap": {
     "grid": [["🟩","🟨","🟥"],["🟩","🟩","🟨"],["🟩","🟩","🟩"]],
-    "location_desc": "Infection concentrated in north-east quadrant, spreading south"
+    "location_desc": "Brief spatial description of where issues are concentrated"
   },
   "zone_analysis": [
     {
       "id": "A",
       "field_percent": "XX%",
       "condition": "Healthy/Mild/Severe",
-      "infection_type": "Fungal/Bacterial/Pest/Nutrient/Abiotic",
-      "symptoms": ["symptom 1", "symptom 2"],
-      "root_cause": "Core scientific reason",
+      "infection_type": "Fungal/Bacterial/Pest/Nutrient/Abiotic/None",
       "priority": "High/Medium/Low",
-      "action": "Specific treatment with product and dose",
-      "estimated_cost_inr": "₹XXX per acre"
+      "issue": "Main issue detected",
+      "action": "Specific treatment action with product and dose"
     }
   ],
   "priority_plan": {
-    "high": "Zone IDs — treat within 24 hours",
-    "medium": "Zone IDs — treat within 3 days",
-    "low": "Zone IDs — monitor weekly"
-  },
-  "spray_schedule": [
-    { "day": "Day 1", "zone": "A, B", "product": "...", "dose_per_acre": "...", "dilution": "...", "timing": "Early morning", "weather": "No rain, below 32°C" },
-    { "day": "Day 4", "zone": "...", "product": "...", "dose_per_acre": "...", "dilution": "...", "timing": "...", "weather": "..." },
-    { "day": "Day 8", "zone": "...", "product": "...", "dose_per_acre": "...", "dilution": "...", "timing": "...", "weather": "..." },
-    { "day": "Day 15", "zone": "...", "product": "...", "dose_per_acre": "...", "dilution": "...", "timing": "...", "weather": "..." }
-  ],
-  "nutrient_zoning": [
-    { "zone": "A", "deficiency": "Nitrogen", "symptom": "Yellowing leaves", "fix": "Urea 25kg/acre, broadcast" }
-  ],
-  "irrigation_plan": {
-    "stressed_zones": "Zone IDs",
-    "waterlogged_zones": "Zone IDs",
-    "method": "Drip/Flood/Sprinkler",
-    "quantity_liters_per_acre": "...",
-    "frequency": "...",
-    "schedule": "..."
+    "high": "Zone IDs that need treatment in 24 hours",
+    "medium": "Zone IDs to treat within 3 days",
+    "low": "Zone IDs to monitor weekly"
   },
   "treatment_strategy": {
-    "type": "Spot / Full field",
+    "type": "Spot Treatment / Full Field",
     "area_to_treat_percent": "XX%",
-    "estimated_spray_cost_inr": "₹XXXX per acre",
-    "short_instruction": "One-line priority instruction"
+    "short_instruction": "One clear instruction for the farmer"
   },
   "savings_insight": {
     "chemical_saved_percent": "XX%",
     "water_saved_percent": "XX%",
+    "cost_saved_rupees": "₹XXXX",
+    "expected_profit_per_sqft": "₹XX.XX",
     "labor_saved_percent": "XX%",
     "total_cost_saved_inr": "₹XXXX"
   },
@@ -160,38 +86,19 @@ ONLY JSON keys remain in English. Return ONLY valid JSON. No markdown.
     "estimated_yield_quintals_per_acre": "XX",
     "yield_loss_percent": "XX%",
     "current_mandi_price_per_quintal_inr": "₹XXXX",
-    "revenue_without_treatment_inr": "₹XXXX per acre",
-    "revenue_after_treatment_inr": "₹XXXX per acre",
-    "treatment_cost_inr": "₹XXXX per acre",
-    "net_gain_from_treatment_inr": "₹XXXX per acre",
+    "revenue_without_treatment_inr": "₹XXXX",
+    "revenue_after_treatment_inr": "₹XXXX",
+    "treatment_cost_inr": "₹XXXX",
+    "net_gain_from_treatment_inr": "₹XXXX",
     "roi_percent": "XX%",
     "expected_profit_per_sqft": "₹XX.XX"
   },
-  "soil_health_zoning": {
-    "carbon_level": "Low/Medium/High",
-    "compaction_zones": "Zone IDs or None",
-    "drainage_quality": "Poor/Medium/Good",
-    "amendment_needed": "Compost 2 tons/acre, Gypsum 200kg/acre, etc."
-  },
-  "risk_propagation": {
-    "will_spread": "Yes/No",
-    "spread_direction": "North-east towards Zone C",
-    "spread_timeline": "3-5 days if uncontrolled",
-    "spread_mechanism": "Wind/Water/Contact/Insects"
-  },
-  "sustainability_score": {
-    "score": 0,
-    "soil_conservation": "Comment",
-    "water_efficiency": "Comment",
-    "chemical_load": "High/Medium/Low",
-    "improvement_tips": ["Tip 1", "Tip 2"]
-  },
   "farmer_checklist": [
-    "1. Immediate action 1",
-    "2. Action 2",
-    "3. Action 3",
-    "4. Action 4",
-    "5. Action 5"
+    "Action 1 — specific and actionable",
+    "Action 2",
+    "Action 3",
+    "Action 4",
+    "Action 5"
   ]
 }`;
 
@@ -210,7 +117,7 @@ ONLY JSON keys remain in English. Return ONLY valid JSON. No markdown.
         },
       ],
       temperature: 0.2,
-      max_tokens: 8000,
+      max_tokens: 4096,
       response_format: { type: 'json_object' },
     };
 
@@ -253,7 +160,7 @@ ONLY JSON keys remain in English. Return ONLY valid JSON. No markdown.
       try {
         return res.status(200).json(JSON.parse(rawContent.replace(/```json/g, '').replace(/```/g, '').trim()));
       } catch {
-        return res.status(500).json({ error: 'Failed to parse AI response' });
+        return res.status(500).json({ error: 'Failed to parse AI response. Please try again.' });
       }
     }
   } catch (error: unknown) {

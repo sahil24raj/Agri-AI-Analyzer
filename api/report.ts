@@ -183,6 +183,8 @@ ONLY keep JSON keys in English. Return ONLY valid JSON. No markdown. No extra te
   "recovery_time": "X-Y days",
   "progress": "Current disease stage and treatment timeline",
   "recommendations": ["General advice 1", "Advice 2", "Advice 3"],
+  "cost_benefit": "Financial summary — expected return vs treatment cost",
+  "spray_plan": "One-line spray instruction summary",
   "action_plan": {
     "today": "Immediate steps to take today",
     "day_1_2": "Critical actions in first 48 hours",
@@ -206,7 +208,7 @@ ONLY keep JSON keys in English. Return ONLY valid JSON. No markdown. No extra te
         },
       ],
       temperature: 0.2,
-      max_tokens: 8000,
+      max_tokens: 4096,
       response_format: { type: 'json_object' },
     };
 
